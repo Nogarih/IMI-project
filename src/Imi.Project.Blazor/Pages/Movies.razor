@@ -1,0 +1,93 @@
+﻿@page "/movies"
+@inject ICRUDService<MovieListItem, MovieItem> service;
+
+<h2>Movies</h2>
+<div class="mt-3">
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="alert alert-danger">
+            @error
+        </div>
+    }
+
+    @if (currentMovie == null)
+    {
+        <MovieList MovieListItems="movieListItems"
+                   OnAddClick="AddMovie"
+                   OnEditClick="EditMovie"
+                   OnDeleteClick="DeleteMovie">
+        </MovieList>
+
+    }
+    else
+    {
+        <MovieDetail Movie="currentMovie"
+                     OnSaveClick="SaveMovie"
+                     OnCancelClick="ShowList">
+
+        </MovieDetail>
+    }
+</div>
+
+
+
+@code {
+    private MovieListItem[] movieListItems;
+    private MovieItem currentMovie;
+    private string error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ShowList();
+    }
+
+    public async Task ShowList()
+    {
+        movieListItems = await service.GetList();
+        //movieListItems = await apiServic
+        this.currentMovie = null;
+    }
+
+    public async Task AddMovie()
+    {
+        this.currentMovie = await service.GetNew();
+    }
+
+    public async Task EditMovie(MovieListItem item)
+    {
+        this.currentMovie = await service.Get(item.Id);
+    }
+
+    public async Task SaveMovie(MovieItem item)
+    {
+        try
+        {
+            if (currentMovie.Id == Guid.Empty)
+            {
+                await service.Create(currentMovie);
+            }
+            else
+            {
+                await service.Update(currentMovie);
+            }
+            await this.ShowList();
+        }
+        catch (Exception ex)
+        {
+            this.error = ex.Message;
+        }
+    }
+
+    public async Task DeleteMovie(MovieListItem item)
+    {
+        try
+        {
+            await service.Delete(item.Id);
+            await this.ShowList();
+        }
+        catch (Exception ex)
+        {
+            this.error = ex.Message;
+        }
+    }
+}

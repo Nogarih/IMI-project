@@ -1,0 +1,91 @@
+﻿@inject IApiMovieService apiService;
+
+@page "/mymovies"
+@using Imi.Project.Blazor.Constants
+
+<h3>MyMovies</h3>
+<div>
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="alert alert-danger">
+            @error
+        </div>
+    }
+    @if (currentMovie == null)
+    {
+        <MyMovieList MovieListItems="movieListItems"
+            OnEditClick="EditMovie"
+            OnDeleteClick="DeleteMovie">
+        </MyMovieList>
+    }
+    else
+    {
+        <MyMovieDetail Movie="currentMovie" 
+            OnCancelClick="ShowList">
+
+        </MyMovieDetail>
+    }
+</div>
+
+
+
+@code {
+    private List<MyMovieListItem> movieListItems = new List<MyMovieListItem>();
+    private MyMovieItem currentMovie;
+    private string error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ShowList();
+    }
+
+    public async Task ShowList()
+    {
+        //movieListItems = await service.GetList();
+        movieListItems = await apiService.ListAllMoviesAsync();
+        this.currentMovie = null;
+    }
+
+    public async Task AddMovie()
+    {
+        //this.currentMovie = await apiService.AddMovieAsync(item.Id);
+    }
+
+    public async Task EditMovie(MyMovieListItem item)
+    {
+        this.currentMovie = await apiService.GetByMovieIdAsync(item.Id);
+    }
+
+    public async Task SaveMovie(MovieItem item)
+    {
+        try
+        {
+            if (currentMovie.Id == Guid.Empty)
+            {
+                await apiService.AddMovieAsync(currentMovie);
+            }
+            else
+            {
+                await apiService.UpdateMovieAsync(currentMovie);
+            }
+            await this.ShowList();
+        }
+        catch (Exception ex)
+        {
+            this.error = ex.Message;
+        }
+    }
+
+    public async Task DeleteMovie(MyMovieListItem item)
+    {
+        try
+        {
+           await apiService.DeleteMovieAsync(item);
+           await this.ShowList();
+        }
+        catch (Exception ex)
+        {
+            this.error = ex.Message;
+        }
+    }
+}

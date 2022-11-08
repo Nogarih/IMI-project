@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:views="clr-namespace:Imi.Project.Mobile.Pages"
+            xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
+            android:TabbedPage.ToolbarPlacement="Bottom"
+            x:Class="Imi.Project.Mobile.Pages.TabbedMenuPage"
+            NavigationPage.HasBackButton="False"
+            SelectedTabColor="{StaticResource ColorWhite}" UnselectedTabColor="{StaticResource ColorWhite}"
+            android:TabbedPage.IsSwipePagingEnabled="False"
+            Title="MyWatchList">
+
+    <NavigationPage.TitleView>
+        <Image Source="titleLogo.png"
+               VerticalOptions="CenterAndExpand"
+               HorizontalOptions="CenterAndExpand"
+               Scale="0.5"/>
+    </NavigationPage.TitleView>
+    <!--Pages can be added as references or inline-->
+    <views:MoviesPage Title="Movies" IconImageSource="movies_icon.png"></views:MoviesPage>
+    <views:SeriesPage Title="Tv Series" IconImageSource="series_icon.png"></views:SeriesPage>
+    <views:AnimePage Title="Anime" IconImageSource="anime_icon.png"></views:AnimePage>
+    <views:WatchListPage Title="My List" IconImageSource="list_icon.png"></views:WatchListPage>
+</TabbedPage>

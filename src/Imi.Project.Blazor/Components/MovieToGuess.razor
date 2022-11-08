@@ -1,0 +1,20 @@
+﻿<div class="d-sm-flex">
+    <div class="mx-auto">
+        <div class="card" style="width: 35rem;">
+            <img src="@Movie.Image" class="card-img-top" alt="...">
+            <div class="card-body">
+                <p class="card-text text-center">@Word</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+
+    [Parameter]
+    public GameItem Movie { get; set; }
+    [Parameter]
+    public string Word { get; set; }
+}

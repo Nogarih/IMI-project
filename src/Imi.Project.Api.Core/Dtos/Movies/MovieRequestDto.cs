@@ -1,0 +1,17 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace Imi.Project.Api.Core.Dtos.Movies
+{
+    public class MovieRequestDto : BaseDto
+    {
+        [Required(ErrorMessage = "{0} is required")]
+        public string Title { get; set; }
+        public int ReleaseYear { get; set; }
+        public string Description { get; set; }
+        public string Image { get; set; }
+        public Guid GenreId { get; set; }
+        public Guid LanguageId { get; set; }
+        public Guid DirectorId { get; set; }
+    }
+}

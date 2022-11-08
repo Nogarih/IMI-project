@@ -1,0 +1,95 @@
+﻿<div class="text-center">
+    <h1 class="display-4">Register</h1>
+</div>
+
+<div id="app">
+    <div class="col-md-12">
+        <div class="alert alert-danger" v-if="feedback">
+            {{feedback}}
+        </div>
+    </div>
+
+    <div v-if="!hasRegistered">
+        <div class="text-left">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" class="form-control" v-model="registerDetails.userName" placeholder="username" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" class="form-control" v-model="registerDetails.email" placeholder="user@email.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" v-model="registerDetails.password" placeholder="password" required>
+                <small class="text-muted">Must be more than 6 characters long</small>
+            </div>
+            <div class="form-group">
+                <label>Confirm password</label>
+                <input type="password" class="form-control" v-model="registerDetails.confirmPassword" placeholder="confirm password" required>
+            </div>
+            <div class="form-group">
+                <label>Birthday</label>
+                <input type="datetime" class="form-control" v-model="registerDetails.birthday" placeholder="yyyy-mm-dd">
+            </div>
+            <div class="form-group">
+                <label>Accept terms and conditions</label>
+                <input type="checkbox" class="form-control" v-model="registerDetails.acceptTermsAndConditions">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-secondary" v-on:click="registerUser">Register</button>
+                <a class="btn btn-danger" href="/Home" role="button">Cancel</a>
+            </div>
+        </div>
+    </div>
+    <div v-else>
+        <a class="btn btn-success" href="/User/Login" role="button">Login</a>
+    </div>
+
+
+</div>
+
+@section scripts{
+    <script src="~/lib/vue/vue.js"></script>
+    <script src="~/lib/axios/axios.min.js"></script>
+
+    <script>
+        var apiURL = apiBase + registerEndpoint;
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                registerDetails: {
+                    userName: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: '',
+                    birthday: '',
+                    acceptTermsAndConditions: true 
+                },
+                feedback: '',
+                hasRegistered: false
+            },
+            methods: {
+                registerUser: function () {
+                    var self = this;
+
+                    axios.post(apiURL, self.registerDetails)
+                        .then(function (response) {
+                            self.registerDetails = response.data
+                            self.feedback = `Your account has been created!`;
+
+                            self.hasRegistered = true;
+                        })
+                        .catch(function (error) {
+                            if (error.response) {
+                                console.log(error.response);
+                                hasError = true;
+                                self.feedback = `Something went wrong, please check your details and fill all fields correctly!`;
+                            }
+                        });
+                }
+            }
+        })
+    </script>
+}

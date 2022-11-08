@@ -1,0 +1,146 @@
+﻿@using Imi.Project.Blazor.Services.Interfaces
+@inject IJSRuntime JSRuntime
+@inject IGuessingGameService service;
+
+@page "/guessinggame"
+
+
+<h1>Guessing Game</h1>
+
+@if (!isGameEnd)
+{
+<h3>
+    Health :
+    @for (int i = 0; i < playerHealth; i++)
+    {
+    <small>❤️</small> 
+    }
+</h3>
+
+    <p>Wrong letters : @badGuess</p>
+    <MovieToGuess Movie="@currentMovie" Word="@secretWord"></MovieToGuess>
+
+    <div class="d-sm-flex">
+        <div class="mx-auto">
+            @foreach (char c in letters)
+            {
+                <button class="btn btn-secondary" @onclick="e => CheckGuess(c)">@c</button>
+            }
+        </div>
+    </div>
+}
+
+@if (isGameEnd && hasWon)
+{
+    <GameWon Movie="@currentMovie"></GameWon>
+}
+
+@if (isGameEnd && !hasWon)
+{
+    <GameOver Movie="@currentMovie"></GameOver>
+}
+
+
+
+
+@code{
+    private GameItem currentMovie;
+    private string word = "";
+    private string secretWord;
+    private string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private int playerHealth;
+    private int maxHealth = 6;
+    private string badGuess = "";
+    private bool hasWon;
+    private bool isGameEnd;
+    private bool isDisabled;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentMovie = await service.GetRandomMovie();
+        word = currentMovie.Name.ToUpper();
+        playerHealth = maxHealth;
+        hasWon = false;
+        isGameEnd = false;
+        isDisabled = false;
+        badGuess = "";
+        secretWord = await service.MakeWordSecret(word);
+    }
+
+
+    private void CheckGuess(char letter)
+    {
+        string currentLetter = letter.ToString();
+
+        var movie = currentMovie.Name.ToUpper().ToCharArray();
+        if (playerHealth > 0)
+        {
+            if (word.Contains(currentLetter, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var chars = secretWord.ToCharArray();
+                for (int i = 0; i < word.Length; i++)
+                {
+                    if (currentLetter[0] == movie[i])
+                    {
+                        chars[i] = currentLetter[0];
+                    }
+                }
+                secretWord = new string(chars);
+            }
+            else
+            {
+                CheckIfWrongLetter(currentLetter);
+            }
+
+            this.isDisabled = true;
+        }
+        if (secretWord == word)
+        {
+            GameWon();
+        }
+        else if (playerHealth == 0)
+        {
+            GameLost();
+        }
+    }
+    private void CheckIfWrongLetter(string currentLetter)
+    {
+        if (!badGuess.Contains(currentLetter, StringComparison.InvariantCultureIgnoreCase))
+        {
+            if (string.IsNullOrEmpty(badGuess))
+            {
+                badGuess = currentLetter;
+                LoseHealth();
+            }
+            else
+            {
+                badGuess = $"{badGuess},{currentLetter}";
+                LoseHealth();
+            }
+        }
+    }
+
+    private void LoseHealth()
+    {
+        if (playerHealth <= 0)
+        {
+            GameLost();
+        }
+        else
+        {
+            playerHealth--;
+        }
+    }
+
+    private void GameWon()
+    {
+        hasWon = true;
+        isGameEnd = true;
+    }
+
+    private void GameLost()
+    {
+        hasWon = false;
+        isGameEnd = true;
+    }
+}

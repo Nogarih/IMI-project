@@ -1,0 +1,178 @@
+﻿<div class="text-center">
+    <h1 class="display-4">Genres</h1>
+</div>
+
+<div id="app">
+    <div v-if="isAuthorized" class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info" v-if="feedback">
+                {{feedback}}
+            </div>
+        </div>
+        <div class="col-md-12">
+            <button type="button" class="btn btn-secondary btn-block w-25" v-on:click.prevent="toEditMode(false)">New</button>
+        </div>
+
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-action" v-for="genre in genres" v-on:click="getGenreDetails(genre)">
+                    {{genre.name}}
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md-6">
+            <div v-if="currentGenre">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input class="form-control" v-model="currentGenre.name" v-bind:readonly="isReadOnly" />
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-warning" v-if="isReadOnly" v-on:click.prevent="toEditMode(true)">Edit</button>
+                    <button class="btn btn-warning" v-if="!isReadOnly" v-on:click.prevent="saveGenre">Save</button>
+                    <button class="btn btn-primary" v-if="!isReadOnly" v-on:click.prevent="isReadOnly = true">Cancel</button>
+                    <button class="btn btn-danger" v-on:click.prevent="deleteGenre">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-else>
+        <div class="col-md-offset-1">
+            <div class="alert alert-danger text-xl-center">
+                <h4 class="alert-heading">You are not authorized to see this page!</h4>
+                <p>Please contact an admin for more info</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/lib/vue/vue.js"></script>
+    <script src="~/lib/axios/axios.min.js"></script>
+
+    <script>
+        const apiURL = apiBase + genreEndpoint;
+        var token = sessionStorage.getItem('jwtToken');
+        const axiosConfig = { headers: { Authorization: `Bearer ${token}` } };
+
+        var app = new Vue({
+            el: "#app",
+            data: {
+                genres: null,
+                currentGenre: null,
+                isReadOnly: true,
+                isEditMode: false,
+                feedback: '',
+                isAuthorized: true
+            },
+            created:
+                function () {
+                    var self = this;
+                    console.log(apiBase);
+                    self.fetchGenres();
+                },
+            methods: {
+                fetchGenres: function () {
+                    var self = this;
+                    axios
+                        .get(apiURL, axiosConfig)
+                        .then(function (response) {
+                            console.log(token);
+                            self.genres = response.data;
+                            self.isAuthorized = true;
+                        })
+                        .catch(function (error) {
+                            if (error.response.status === 403 || error.response.status === 401) {
+                                self.isAuthorized = false;
+                                console.log(error);
+                            }
+                        });
+                },
+                getGenreDetails: function (genre) {
+                    var self = this;
+                    self.currentGenre = genre;
+                },
+
+                toEditMode: function (isEditMode) {
+                    var self = this;
+                    self.isReadOnly = false;
+                    self.isEditMode = isEditMode;
+
+                    if (!self.isEditMode) {
+                        self.currentGenre = {
+                            name: ""
+                        }
+                    }
+                },
+
+                saveGenre: function () {
+                    var self = this;
+
+                    if (self.isEditMode) {
+
+                        var url = `${apiURL}`;
+                        axios.put(url, self.currentGenre, axiosConfig)
+                            .then(function (response) {
+                                self.feedback = `Genre ${self.currentGenre.name} has been modified`;
+                            })
+                            .catch(function (error) {
+                                if (error.response.status === 403 || error.response.status === 401) {
+                                    self.feedback = `You are not authorized to modify a genre`;
+                                    console.log(error);
+                                }
+                            })
+                            .then(function () {
+                                self.isReadOnly = true;
+                                setTimeout(function () { self.feedback = null; }, 3000);
+                            });
+                    }
+                    else {
+                        var url = `${apiURL}`;
+                        axios.post(url, self.currentGenre, axiosConfig)
+                            .then(function (response) {
+                                self.currentGenre = response.data;
+                                self.feedback = `Genre ${self.currentGenre.name} has been created`;
+                                self.genres.push(self.currentGenre); // update genres
+                            })
+                            .catch(function (error) {
+                                if (error.response.status === 403 || error.response.status === 401) {
+                                    self.feedback = `You are not authorized to create a genre`;
+                                    console.log(error);
+                                }
+                                console.error(error);
+                            })
+                            .then(function () {
+                                self.isReadOnly = true;
+                                setTimeout(function () { self.feedback = null; }, 3000);
+                            });
+                    }
+                },
+                deleteGenre: function () {
+                    var self = this;
+                    var url = `${apiURL}/${self.currentGenre.id}`;
+
+                    axios.delete(url, axiosConfig)
+                        .then(function (response) {
+                            self.genres.forEach(function (genre, i) {
+                                if (genre.id === self.currentGenre.id) {
+                                    self.genres.splice(i, 1); // update genres
+                                    self.currentGenre = {
+                                        name: ""
+                                    }
+                                    self.feedback = `Genre ${self.currentGenre.name} has been deleted`;
+                                    setTimeout(function () { self.feedback = null; }, 3000);
+                                }
+                            })
+                        })
+                        .catch(function (error) {
+                            if (error.response.status === 403 || error.response.status === 401) {
+                                self.feedback = `You are not authorized to delete a genre`;
+                                console.log(error);
+                            }
+                            console.error(error);
+                        })
+                },
+            }
+        });
+    </script>
+}

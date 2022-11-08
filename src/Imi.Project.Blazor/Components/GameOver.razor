@@ -1,0 +1,12 @@
+﻿<div class="col-md-12">
+    <div class="alert alert-danger text-center">
+        <h2 class="alert-heading">GAME OVER!</h2>
+        <p class="mb-0">You did not guess the movie @Movie.Name!</p>
+        <img src="@Movie.Image" style="width: 25rem;" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public GameItem Movie { get; set; }
+}

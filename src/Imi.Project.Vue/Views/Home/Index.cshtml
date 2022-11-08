@@ -1,0 +1,48 @@
+﻿<div class="text-center">
+    <h1 class="display-4">Welcome to MyWatchList</h1>
+</div>
+
+<div id="app">
+    <div v-if="!isLoggedIn" class="text-center">
+        <a class="btn btn-success" href="/User/Login" role="button">Login</a>
+        <a class="btn btn-secondary" href="/User/Register" role="button">Register</a>
+    </div>
+    <div v-else class="text-center">
+        <p>You are logged in!</p>
+        <a class="btn btn-danger" href="/User/Logout" role="button">Logout</a>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/lib/vue/vue.js"></script>
+    <script src="~/lib/axios/axios.min.js"></script>
+
+    <script>
+        var token = sessionStorage.getItem('jwtToken');
+
+        var app = new Vue({
+            el: "#app",
+            data: {
+                isLoggedIn: false
+            },
+            mounted: function () {
+                var self = this;
+                console.log(token);
+                self.checkIfLoggedIn();
+            },
+            methods: {
+                checkIfLoggedIn: function () {
+                    var self = this;
+                    self.token = sessionStorage.getItem('jwtToken');
+                    if (token == null) {
+                        self.isLoggedIn = false;
+                    }
+                    else {
+                        self.isLoggedIn = true;
+                    }
+                    console.log(self.isLoggedIn);
+                }
+            }
+        });
+    </script>
+}

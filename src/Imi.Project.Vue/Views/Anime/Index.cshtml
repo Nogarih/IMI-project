@@ -1,0 +1,269 @@
+﻿<div class="text-center">
+    <h1 class="display-4">Animes</h1>
+</div>
+
+<div id="app">
+    <div v-if="isAuthorized" class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info" v-if="feedback">
+                {{feedback}}
+            </div>
+        </div>
+        <div class="col-md-12">
+            <button class="btn btn-secondary btn-block w-25" v-on:click.prevent="toEditMode(false)">New</button>
+        </div>
+
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-action" v-for="anime in animes" v-on:click="getAnimeDetails(anime)">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5>
+                            {{anime.title}}
+                            <small>({{anime.releaseYear}})</small>
+                        </h5>
+                    </div>
+                    <p class="mb-1">{{anime.description}})</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md-6">
+            <div v-if="currentAnime">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input class="form-control" v-model="currentAnime.title" v-bind:readonly="isReadOnly" />
+                </div>
+                <div class="form-group">
+                    <label>Release year</label>
+                    <input type="number" class="form-control" v-model="currentAnime.releaseYear" v-bind:readonly="isReadOnly" />
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control" v-model="currentAnime.description" v-bind:readonly="isReadOnly" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Genre</label>
+                    <input class="form-control" v-if="isReadOnly" v-model="currentAnime.genre.name" v-bind:readonly="isReadOnly" />
+                    <select v-else class="form-control" v-model="currentAnime.genre" v-bind:readonly="isReadOnly">
+                        <option v-for="genre in genres" v-bind:value="genre">{{genre.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Language</label>
+                    <input class="form-control" v-if="isReadOnly" v-model="currentAnime.language.name" v-bind:readonly="isReadOnly" />
+                    <select v-else class="form-control" v-model="currentAnime.language" v-bind:readonly="isReadOnly">
+                        <option v-for="language in languages" v-bind:value="language">{{language.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Seasons</label>
+                    <input type="number" class="form-control" v-model="currentAnime.seasons" v-bind:readonly="isReadOnly" />
+                </div>
+                <div class="form-group">
+                    <label>Total episodes</label>
+                    <input type="number" class="form-control" v-model="currentAnime.totalEpisodes" v-bind:readonly="isReadOnly" />
+                </div>
+                <div class="form-group">
+                    <label>Does it have english subtitles?</label>
+                    <input type="checkbox" class="form-control" v-model="currentAnime.hasSub" v-bind:disabled="isReadOnly" />
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-warning" v-if="isReadOnly" v-on:click.prevent="toEditMode(true)">Edit</button>
+                    <button class="btn btn-warning" v-if="!isReadOnly" v-on:click.prevent="saveAnime">Save</button>
+                    <button class="btn btn-primary" v-if="!isReadOnly" v-on:click.prevent="isReadOnly = true">Cancel</button>
+                    <button class="btn btn-danger" v-on:click.prevent="deleteAnime">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-else>
+        <div class="col-md-offset-1">
+            <div class="alert alert-danger text-xl-center">
+                <h4 class="alert-heading">You are not authorized to see this page!</h4>
+                <p>Please contact an admin for more info</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/lib/vue/vue.js"></script>
+    <script src="~/lib/axios/axios.min.js"></script>
+
+    <script>
+
+        const apiURL = apiBase + animeEndpoint;
+        var token = sessionStorage.getItem('jwtToken');
+        const axiosConfig = { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } };
+
+        var app = new Vue({
+            el: "#app",
+            data: {
+                animes: null,
+                genres: null,
+                languages: null,
+                currentAnime: null,
+                isReadOnly: true,
+                isEditMode: false,
+                feedback: '',
+                isAuthorized: true
+            },
+            created:
+                function () {
+                    var self = this;
+                    console.log(apiBase);
+                    self.fetchAnimes();
+                    self.fetchGenres();
+                    self.fetchLanguages();
+                },
+            methods: {
+                fetchAnimes: function () {
+                    var self = this;
+                    axios
+                        .get(apiURL, axiosConfig)
+                        .then(function (response) {
+                            console.log(token);
+                            self.animes = response.data;
+                            self.isAuthorized = true;
+                        })
+                        .catch(function (error) {
+                            if (error.response.status === 403 || error.response.status === 401) {
+                                self.isAuthorized = false;
+                                console.log(error);
+                            }
+                        });
+                },
+                fetchGenres: function () {
+                    var self = this;
+                    axios
+                        .get(`${apiBase}${genreEndpoint}`, axiosConfig)
+                        .then(function (response) {
+                            self.genres = response.data;
+                        })
+                        .catch(function (error) {
+                            console.error(error);
+                        });
+                },
+                fetchLanguages: function () {
+                    var self = this;
+                    axios
+                        .get(`${apiBase}${languageEndpoint}`, axiosConfig)
+                        .then(function (response) {
+                            self.languages = response.data;
+                        })
+                        .catch(function (error) {
+                            console.error(error);
+                        });
+                },
+                getAnimeDetails: function (anime) {
+                    var self = this;
+                    self.currentAnime = anime;
+                },
+
+                toEditMode: function (isEditMode) {
+                    var self = this;
+                    self.isReadOnly = false;
+                    self.isEditMode = isEditMode;
+
+                    if (!self.isEditMode) {
+                        self.currentAnime = {
+                            title: "",
+                            releaseYear: "",
+                            description: "",
+                            genre: "",
+                            language: "",
+                            seasons: "",
+                            totalEpisodes: ""
+                        }
+                    }
+                },
+
+                saveAnime: function () {
+                    var self = this;
+
+                    console.log(self.currentAnime);
+                    let animeToSend = {
+                        id: self.currentAnime.id,
+                        title: self.currentAnime.title,
+                        releaseYear: parseInt(self.currentAnime.releaseYear),
+                        description: self.currentAnime.description,
+                        image: "no image at the moment",
+                        genreId: self.currentAnime.genre.id,
+                        languageId: self.currentAnime.language.id,
+                        seasons: parseInt(self.currentAnime.seasons),
+                        totalEpisodes: parseInt(self.currentAnime.totalEpisodes),
+                        hasSub: self.currentAnime.hasSub
+                    }
+
+                    if (self.isEditMode) {
+                        var url = `${apiURL}`;
+                        console.log(animeToSend);
+                        axios.put(url, animeToSend, axiosConfig)
+                            .then(function (response) {
+                                self.feedback = `Anime ${self.currentAnime.title} has been modified`;
+                            })
+                            .catch(function (error) {
+                                if (error.response.status === 403 || error.response.status === 401) {
+                                    self.feedback = `You are not authorized to modify an anime`;
+                                    console.log(error);
+                                }
+                            })
+                            .then(function () {
+                                self.isReadOnly = true;
+                                setTimeout(function () { self.feedback = null; }, 3000);
+                            });
+                    }
+                    else {
+                        var url = `${apiURL}`;
+                        axios.post(url, animeToSend, axiosConfig)
+                            .then(function (response) {
+                                self.feedback = `Anime ${self.currentAnime.title} has been created`;
+                                self.animes.push(self.currentAnime); // update animes
+                            })
+                            .catch(function (error) {
+                                if (error.response.status === 403 || error.response.status === 401) {
+                                    self.feedback = `You are not authorized to create an anime`;
+                                    console.log(error);
+                                }
+                            })
+                            .then(function () {
+                                self.isReadOnly = true;
+                                setTimeout(function () { self.feedback = null; }, 3000);
+                            });
+                    }
+                },
+                deleteAnime: function () {
+                    var self = this;
+                    var url = `${apiURL}/${self.currentAnime.id}`;
+
+                    axios.delete(url, axiosConfig)
+                        .then(function (response) {
+                            self.animes.forEach(function (anime, i) {
+                                if (anime.id === self.currentAnime.id) {
+                                    self.animes.splice(i, 1); // update animes
+                                    self.currentAnime = {
+                                        title: "",
+                                        releaseYear: "",
+                                        description: "",
+                                        genre: "",
+                                        language: "",
+                                        seasons: "",
+                                        totalEpisodes: ""
+                                    }
+                                    self.feedback = `Anime ${self.currentAnime.title} has been deleted`;
+                                    setTimeout(function () { self.feedback = null; }, 3000);
+                                }
+                            })
+                        })
+                        .catch(function (error) {
+                            if (error.response.status === 403 || error.response.status === 401) {
+                                self.feedback = `You are not authorized to delete an anime`;
+                                console.log(error);
+                            }
+                            console.error(error);
+                        })
+                },
+            }
+        });
+    </script>
+}

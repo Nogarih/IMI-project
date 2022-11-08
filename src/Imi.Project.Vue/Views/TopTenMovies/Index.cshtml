@@ -1,0 +1,70 @@
+﻿<div class="text-center">
+    <h1 class="display-4">Top 10 movies</h1>
+
+</div>
+
+<div id="app" class="row justify-content-center">
+
+    <div v-for="movie in topMovies">
+        <div class="card mb-3" style="max-width: 640px;">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img v-bind:src='"https://www.themoviedb.org/t/p/w220_and_h330_face" + movie.poster_path' class="card-img" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{movie.title}} - {{movie.vote_average}}</h5>
+                        <p class="card-text">{{movie.overview}}</p>
+                        <p class="card-text"><small class="text-muted">Vote count: {{movie.vote_count}}</small></p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/lib/vue/vue.js"></script>
+    <script src="~/lib/axios/axios.min.js"></script>
+
+    <script>
+        var apiURL = 'https://api.themoviedb.org/3/movie/top_rated?api_key=6ebfdabc3787595e36413cfef5b5ceec&language=en-US&page=1';
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                movies: null,
+                topMovies: null,
+                imageUrl: null
+
+            },
+            created: function () {
+                var self = this;
+                self.fetchMovies();
+            },
+            methods: {
+                fetchMovies: function () {
+                    var self = this;
+
+                    axios.get(`${apiURL}`)
+                        .then(function (response) {
+                            self.movies = response.data.results;
+                            self.topMovies = self.movies.splice(0, 10);
+                        })
+                        .catch(function (error) {
+                            console.error(error);
+                        });
+                },
+                getImage: function (movie) {
+                    let baseUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/";
+                    self.imageUrl = `${baseUrl}{movie.poster_path}`;
+
+                    return self.imageUrl;
+                }
+            }
+        });
+    </script>
+}

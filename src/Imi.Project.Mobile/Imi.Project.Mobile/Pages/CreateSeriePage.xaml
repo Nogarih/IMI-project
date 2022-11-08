@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:bhv="clr-namespace:Imi.Project.Mobile.Behaviors"
+             x:Class="Imi.Project.Mobile.Pages.CreateSeriePage">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Margin="25,15,25,0">
+                <Label Text="Add Serie" FontSize="30" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Label Text="Watch status" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Picker ItemsSource="{Binding WatchStatuses}" 
+                        SelectedItem="{Binding SelectedWatchStatus}" 
+                        ItemDisplayBinding="{Binding Name}" 
+                        Title="Watchstatus" FontSize="14" TextColor="{StaticResource ColorTextGray}" WidthRequest="400">
+                    <Picker.Behaviors>
+                        <bhv:EventToCommandBehavior
+                                EventName="SelectedIndexChanged"
+                                Command="{Binding SetWatchStatus}">
+                        </bhv:EventToCommandBehavior>
+                    </Picker.Behaviors>
+                </Picker>
+                <Label Text="Title Serie" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Entry Text="{Binding Title}" Placeholder="SerieTitle" FontSize="14" TextColor="{StaticResource ColorTextGray}" Keyboard="Text"></Entry>
+                <Label Text="Release year" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Entry Text="{Binding ReleaseYear}" Placeholder="2019" FontSize="14" TextColor="{StaticResource ColorTextGray}" Keyboard="Numeric"></Entry>
+                <Label Text="Seasons" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Entry Text="{Binding Seasons}" Placeholder="2" FontSize="14" TextColor="{StaticResource ColorTextGray}" Keyboard="Numeric"></Entry>
+                <Label Text="Watched episodes" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Entry Text="{Binding WatchedEpisodes}" Placeholder="0" FontSize="14" TextColor="{StaticResource ColorTextGray}" Keyboard="Numeric"></Entry>
+                <Label Text="Total episodes" Margin="0,5,0,0" FontSize="30" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Entry Text="{Binding TotalEpisodes}" Placeholder="2019" FontSize="14" TextColor="{StaticResource ColorTextGray}" Keyboard="Numeric"></Entry>
+                <Label Text="Language" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Picker ItemsSource="{Binding Languages}" 
+                        SelectedItem="{Binding SelectedLanguage}" 
+                        ItemDisplayBinding="{Binding Name}" 
+                        Title="Languages" FontSize="14" TextColor="{StaticResource ColorTextGray}" WidthRequest="400">
+                    <Picker.Behaviors>
+                        <bhv:EventToCommandBehavior
+                                EventName="SelectedIndexChanged"
+                                Command="{Binding SetLanguage}">
+                        </bhv:EventToCommandBehavior>
+                    </Picker.Behaviors>
+                </Picker>
+                <Label Text="Genres" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Picker ItemsSource="{Binding Genres}" 
+                        SelectedItem="{Binding SelectedGenre}" 
+                        ItemDisplayBinding="{Binding Name}" 
+                        Title="Genres" FontSize="14" TextColor="{StaticResource ColorTextGray}" WidthRequest="400">
+                    <Picker.Behaviors>
+                        <bhv:EventToCommandBehavior
+                                EventName="SelectedIndexChanged"
+                                Command="{Binding SetGenre}">
+                        </bhv:EventToCommandBehavior>
+                    </Picker.Behaviors>
+                </Picker>
+                <Label Text="Description" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Editor Text="{Binding SerieDescription}" BackgroundColor="LightGray" WidthRequest="200" HeightRequest="250" Placeholder="..." FontSize="14" TextColor="{StaticResource ColorTextGray}" Keyboard="Text"></Editor>
+                <Button Command="{Binding UploadImageButtonTapped}"
+                            Text="Upload image"
+                            TextColor="{StaticResource ColorPrimaryRed}"
+                            FontSize="12"
+                            BackgroundColor="{StaticResource ColorWhite}"
+                            BorderColor="{StaticResource ColorTextGray}"
+                            BorderWidth="1"
+                            CornerRadius="20"
+                            WidthRequest="125"
+                            HeightRequest="35"
+                            Margin="0,10,10,0">
+                </Button>
+                <Button Command="{Binding TakePhotoButtonTapped}"
+                            Text="Take photo"
+                            TextColor="{StaticResource ColorPrimaryRed}"
+                            FontSize="12"
+                            BackgroundColor="{StaticResource ColorWhite}"
+                            BorderColor="{StaticResource ColorTextGray}"
+                            BorderWidth="1"
+                            CornerRadius="20"
+                            WidthRequest="125"
+                            HeightRequest="35"
+                            Margin="0,10,10,0">
+                </Button>
+                <Button Command="{Binding CreateSerieButtonTapped}"
+                            Text="Add movie"
+                            TextColor="{StaticResource ColorWhite}"
+                            FontSize="12"
+                            BackgroundColor="{StaticResource ColorPrimaryRed}"
+                            CornerRadius="20"
+                            WidthRequest="125"
+                            HeightRequest="35"
+                            Margin="0,10,10,0">
+                </Button>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,39 @@
+﻿<button class="btn btn-success" @onclick="OnAddClick">Add Movie</button>
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in MovieListItems)
+        {
+        <tr>
+            <td>@movie.Title</td>
+            <td>@movie.Genre</td>
+            <td>
+                <button class="btn btn-secondary" @onclick="e => OnEditClick.InvokeAsync(movie)">Edit</button>
+                <button class="btn btn-danger" @onclick="e => OnDeleteClick.InvokeAsync(movie)">Delete</button>
+            </td>
+        </tr>
+
+        }
+    </tbody>
+</table>
+
+@code {
+
+    [Parameter]
+    public MovieListItem[] MovieListItems { get; set; }
+
+    [Parameter]
+    public EventCallback OnAddClick { get; set; }
+
+    [Parameter]
+    public EventCallback<MovieListItem> OnEditClick { get; set; }
+
+    [Parameter]
+    public EventCallback<MovieListItem> OnDeleteClick { get; set; }
+}

@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Imi.Project.Mobile.Pages.CreateAnimePage">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Margin="25,15,25,0">
+                <Label Text="Add Anime" FontSize="30" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Label Text="Watch status" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Picker x:Name="PickerWatchStatusses" Title="Watchstatus" FontSize="14" TextColor="{StaticResource ColorTextGray}" WidthRequest="400">
+                    <Picker.Items>
+                        <x:String>Plan to watch</x:String>
+                        <x:String>Watching</x:String>
+                        <x:String>Completed</x:String>
+                    </Picker.Items>
+                </Picker>
+                <Label Text="Title Movie" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Entry x:Name="enMovie" Placeholder="Joker" FontSize="14" TextColor="{StaticResource ColorTextGray}" Keyboard="Text"></Entry>
+                <Label Text="Director" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Entry x:Name="enWatchStatus" Placeholder="Todd Philips" FontSize="14" TextColor="{StaticResource ColorTextGray}" Keyboard="Text"></Entry>
+                <Label Text="Release year" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Entry x:Name="enReleaseYear" Placeholder="2019" FontSize="14" TextColor="{StaticResource ColorTextGray}" Keyboard="Numeric"></Entry>
+                <Label Text="Genres" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Picker x:Name="PickerGenres" Title="Genres" FontSize="14" TextColor="{StaticResource ColorTextGray}" WidthRequest="400">
+                    <Picker.Items>
+                        <x:String>Crime</x:String>
+                        <x:String>Drama</x:String>
+                        <x:String>Thriller</x:String>
+                    </Picker.Items>
+                </Picker>
+                <Label Text="Description" Margin="0,5,0,0" FontSize="14" HorizontalTextAlignment="Start" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes ="Bold"></Label>
+                <Editor x:Name="edDescription" BackgroundColor="LightGray" WidthRequest="200" HeightRequest="250" Placeholder="..." FontSize="14" TextColor="{StaticResource ColorTextGray}" Keyboard="Text"></Editor>
+                <Button x:Name="btnUploadImage"
+                            Text="Upload image"
+                            TextColor="{StaticResource ColorPrimaryRed}"
+                            FontSize="12"
+                            BackgroundColor="{StaticResource ColorWhite}"
+                            BorderColor="{StaticResource ColorTextGray}"
+                            BorderWidth="1"
+                            CornerRadius="20"
+                            WidthRequest="125"
+                            HeightRequest="35"
+                            Margin="0,10,10,0">
+                </Button>
+                <Button x:Name="btnCreateMovie"
+                            Text="Add movie"
+                            TextColor="{StaticResource ColorWhite}"
+                            FontSize="12"
+                            BackgroundColor="{StaticResource ColorPrimaryRed}"
+                            CornerRadius="20"
+                            WidthRequest="125"
+                            HeightRequest="35"
+                            Margin="0,10,10,0">
+                </Button>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

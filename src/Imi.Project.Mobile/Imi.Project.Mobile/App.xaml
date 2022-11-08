@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:conv="clr-namespace:Imi.Project.Mobile.Converters"
+             x:Class="Imi.Project.Mobile.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Converters -->
+            <conv:ItemTappedEventArgsConverter x:Key="ItemTappedConv" />
+
+            <!-- Common Colors -->
+            <Color x:Key="ColorPrimaryRed">#CC1616</Color>
+            <Color x:Key="ColorWhite">#FFFFFF</Color>
+            <Color x:Key="ColorTextBlack">#000000</Color>
+            <Color x:Key="ColorTextGray">#AFAFAF</Color>
+            <Color x:Key="ColorLabelPink">#EE63B6</Color>
+            <Color x:Key="ColorLabelGreen">#5FBA85</Color>
+            <Color x:Key="ColorLabelBlue">#09C1DE</Color>
+            <Color x:Key="ColorNavigationDarkRed">#AD1414</Color>
+
+            <!-- Bachground color to white -->
+
+            <Style x:Key="PageStyle" TargetType="ContentPage">
+                <Setter Property="BackgroundColor" Value= "Red" />
+            </Style>
+
+            <!-- On Platform Resources -->
+            <OnPlatform x:Key="DefaultThickness" x:TypeArguments="Thickness">
+                <On Platform="iOS" Value="0"></On>
+                <On Platform="Android" Value="0"></On>
+                <On Platform="UWP" Value="20"></On>
+            </OnPlatform>
+
+
+            <!-- Logo image -->
+
+            <Style x:Key="MainLogo" TargetType="Image">
+                <Setter Property="Source" Value="mwlLogo.png"></Setter>
+            </Style>
+
+            <Style x:Key="LogoMobile" BasedOn="{StaticResource MainLogo}" TargetType="Image">
+                <Setter Property="HeightRequest" Value="100"></Setter>
+                <Setter Property="Margin" Value="0,60,0,0"></Setter>
+            </Style>
+
+            <!-- Login -->
+            <Style x:Key="LoginFrameWhite" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorWhite}"></Setter>
+                <Setter Property="HeightRequest" Value="350"></Setter>
+                <Setter Property="WidthRequest" Value="300"></Setter>
+                <Setter Property="CornerRadius" Value="34"></Setter>
+            </Style>
+
+            <!-- Buttons -->
+            <Style x:Key="btnLoginRed" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorPrimaryRed}"></Setter>
+                <Setter Property="TextColor" Value="{StaticResource ColorWhite}"></Setter>
+            </Style>
+
+            <Style x:Key="googleLogo" TargetType="ImageButton">
+                <Setter Property="Source" Value="GoogleLogo.png"/>
+                <Setter Property="WidthRequest" Value="60"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorWhite}"/>
+            </Style>
+
+            <Style x:Key="facebookLogo" TargetType="ImageButton">
+                <Setter Property="Source" Value="FacebookLogo.png"/>
+                <Setter Property="WidthRequest" Value="70"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorWhite}"/>
+            </Style>
+
+            <Style TargetType="TabbedPage" ApplyToDerivedTypes="True">
+                <Setter Property="BarBackgroundColor" Value="{StaticResource ColorPrimaryRed}"></Setter>
+                <Setter Property="BarTextColor" Value="{StaticResource ColorWhite}"></Setter>
+            </Style>
+
+        </ResourceDictionary>
+        <Style TargetType="NavigationPage">
+            <Setter Property="BarBackgroundColor" Value="#CC1616"></Setter>
+            <Setter Property="BarTextColor" Value="White"></Setter>
+        </Style>
+    </Application.Resources>
+</Application>

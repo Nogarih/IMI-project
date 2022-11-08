@@ -1,0 +1,26 @@
+﻿@inject IApiMovieService apiService;
+@page "/"
+
+<h1>Welcome to MyWatchList!</h1>
+<img src="https://cdn.mos.cms.futurecdn.net/5Vxv9CoWUosE9JKDFh3yHA.jpg" />
+
+@code {
+    private List<MyMovieListItem> movieListItems = new List<MyMovieListItem>();
+    private MyMovieItem currentMovie;
+    private string error;
+    private string message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Login();
+    }
+
+    public async Task Login()
+    {
+        this.message = "Loggin in";
+        await apiService.LoginAsync();
+        this.message = "User logged in!";
+    }
+}
+
+

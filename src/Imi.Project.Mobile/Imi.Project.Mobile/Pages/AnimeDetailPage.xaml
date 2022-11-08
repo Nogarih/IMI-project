@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Imi.Project.Mobile.Pages.AnimeDetailPage"
+             Title="Anime Details">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Edit" Order="Secondary" Priority="1" Clicked="BtnEditAnime_Clicked"/>
+        <ToolbarItem Text="Delete" Order="Secondary" Priority="2" Clicked="BtnDeleteAnime_Clicked"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+                <Frame HeightRequest="300" Padding="0" Margin="0">
+                    <Image Source="{Binding Image}" Aspect="AspectFill"></Image>
+                </Frame>
+                <Label Text="{Binding Title}" FontSize="30" Margin="15,0,0,0" TextColor="{StaticResource ColorPrimaryRed}" FontAttributes="Bold"></Label>
+                <FlexLayout Margin="20,0,0,0" JustifyContent="Start">
+                    <Label Text="Release Year: " FontSize="16" TextColor="{StaticResource ColorPrimaryRed}"></Label>
+                    <Label Text="{Binding ReleaseYear}" FontSize="16" TextColor="Black"></Label>
+                </FlexLayout>
+                <FlexLayout Margin="20,0,0,0" JustifyContent="Start">
+                    <Label Text="Language: " FontSize="16" TextColor="{StaticResource ColorPrimaryRed}"></Label>
+                    <Label Text="{Binding Language.Name}" FontSize="16" TextColor="Black"></Label>
+                </FlexLayout>
+                <FlexLayout Margin="20,0,0,0" JustifyContent="Start">
+                    <Label Text="Seasons: " FontSize="16" TextColor="{StaticResource ColorPrimaryRed}"></Label>
+                    <Label Text="{Binding Seasons}" FontSize="16" TextColor="Black"></Label>
+                    <Label Text=" seasons" FontSize="16" TextColor="Black"></Label>
+                </FlexLayout>
+                <FlexLayout Margin="20,0,0,0" JustifyContent="Start">
+                    <Label Text="Total episodes: " FontSize="16" TextColor="{StaticResource ColorPrimaryRed}"></Label>
+                    <Label Text="{Binding TotalEpisodes}" FontSize="16" TextColor="Black"></Label>
+                    <Label Text=" episodes" FontSize="16" TextColor="Black"></Label>
+                </FlexLayout>
+                <FlexLayout Margin="20,0,0,0" JustifyContent="Start">
+                    <Label Text="Genre: " FontSize="16" TextColor="{StaticResource ColorPrimaryRed}"></Label>
+                    <Label Text="{Binding Genre.Name}" FontSize="16" TextColor="Black"></Label>
+                </FlexLayout>
+                <Frame HorizontalOptions="Center" WidthRequest="250" CornerRadius="20">
+                    <Label  Text="{Binding Description}" FontSize="16" TextColor="{StaticResource ColorPrimaryRed}"></Label>
+                </Frame>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

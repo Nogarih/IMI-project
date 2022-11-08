@@ -1,0 +1,60 @@
+﻿<EditForm Model="@Movie" OnValidSubmit="@(e => OnSaveClick.InvokeAsync(Movie))">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="title">Title: </label>
+        <InputText id="title" @bind-Value="Movie.Title" class="form-control" />
+        <ValidationMessage For="@(() => Movie.Title)" />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <InputTextArea id="description" @bind-Value="Movie.Description" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="genre">Genre: </label>
+        <InputSelect id="genre" @bind-Value="Movie.GenreId" class="form-control">
+            @foreach (var genre in Movie.Genres)
+            {
+                <option value="@genre.Value">@genre.Label</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => Movie.GenreId)" />
+    </div>
+    <div class="form-group">
+        <label for="language">Language: </label>
+        <InputSelect id="language" @bind-Value="Movie.LanguageId" class="form-control">
+            @foreach (var language in Movie.Languages)
+            {
+                <option value="@language.Value">@language.Label</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => Movie.LanguageId)" />
+    </div>
+
+    <div class="form-group">
+        <label for="director">Director: </label>
+        <InputSelect id="director" @bind-Value="Movie.DirectorId" class="form-control">
+            @foreach (var director in Movie.Directors)
+            {
+                <option value="@director.Value">@director.Label</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => Movie.DirectorId)" />
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <button type="button" class="btn btn-danger" @onclick="OnCancelClick">Cancel</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public MovieItem Movie { get; set; }
+    [Parameter]
+    public EventCallback<MovieItem> OnSaveClick { get; set; }
+    [Parameter]
+    public EventCallback OnCancelClick { get; set; }
+    [Parameter]
+    public string ReleaseYearString { get; set; }
+}

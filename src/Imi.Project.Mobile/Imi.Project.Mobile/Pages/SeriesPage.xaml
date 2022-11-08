@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+             xmlns:bhv="clr-namespace:Imi.Project.Mobile.Behaviors"
+             x:Class="Imi.Project.Mobile.Pages.SeriesPage"
+             BackgroundColor="WhiteSmoke"
+             Title="Series">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add serie" IconImageSource="AddIcon.png" Command="{Binding CreateSerieClicked}"/>
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <ScrollView BackgroundColor="WhiteSmoke">
+            <StackLayout>
+                <FlexLayout Margin="0,10,0,10">
+                    <SearchBar
+                        HorizontalOptions="Center"
+                        Placeholder="Search movie"
+                        WidthRequest= "380"
+                        Keyboard="Text"
+                        MaxLength="40"
+                        TextColor="{StaticResource ColorPrimaryRed}"
+                        FontSize="Medium"
+                        FontAttributes="Italic"
+                        TextTransform="Lowercase"
+                        Opacity="50">
+                    </SearchBar>
+                </FlexLayout>
+                <flv:FlowListView FlowItemsSource="{Binding Series}" FlowColumnCount="2" HasUnevenRows="False" RowHeight="250">
+                    <flv:FlowListView.Behaviors>
+                        <bhv:EventToCommandBehavior
+                                EventName="FlowItemTapped"
+                                Command="{Binding SerieListItemTapped}"
+                                EventArgsConverter="{StaticResource ItemTappedConv}">
+                        </bhv:EventToCommandBehavior>
+                    </flv:FlowListView.Behaviors>
+                    <flv:FlowListView.FlowColumnTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <Image Source="{Binding Image}" Margin="0,0,0,0" BackgroundColor="WhiteSmoke" WidthRequest="130" HeightRequest="191"/>
+                                <Label HorizontalOptions="Center" TextColor="{StaticResource ColorTextBlack}">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat= "{}{0} ({1})">
+                                            <Binding Path="Title"/>
+                                            <Binding Path="ReleaseYear"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </StackLayout>
+                        </DataTemplate>
+                    </flv:FlowListView.FlowColumnTemplate>
+                </flv:FlowListView>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

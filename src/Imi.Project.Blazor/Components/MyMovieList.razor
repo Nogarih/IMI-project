@@ -1,0 +1,32 @@
+﻿<button class="btn btn-success">Add Movie</button>
+<div class="d-sm-flex">
+    <div class="row">
+        @foreach (var movie in MovieListItems)
+        {
+            <div class="card col-4" style="max-width: 18rem">
+                <img class="card-img-top" src="@movie.Image">
+                <div class="card-body">
+                    <h5 class="card-card-title">@movie.Title</h5>
+                    <p class="card-text">@movie.Description</p>
+                </div>
+                <div class="card-footer text-center">
+                    <button class="btn btn-secondary" @onclick="e => OnEditClick.InvokeAsync(movie)">Edit</button>
+                    <button class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div> 
+</div> 
+
+   
+
+@code {
+
+    [Parameter]
+    public List<MyMovieListItem> MovieListItems { get; set; }
+
+    [Parameter]
+    public EventCallback<MyMovieListItem> OnEditClick { get; set; }
+    [Parameter]
+    public EventCallback<MyMovieListItem> OnDeleteClick{ get; set; }
+}
